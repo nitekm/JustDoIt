@@ -1,0 +1,43 @@
+services:
+  ## MONGODB
+  mongodb:
+    image: mongo:7.0
+    container_name: justdoit-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: justdoit
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - justdoit-network
+
+  ## APPLICATION
+  justdoit-app:
+    build: .
+    container_name: justdoit-app
+    restart: unless-stopped
+    environment:
+      spring.data.mongodb.uri: mongodb://mongodb:27017/justdoit
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - justdoit-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  justdoit-network:
+    driver: bridge
