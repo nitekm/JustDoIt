@@ -1,8 +1,7 @@
 package asessment.justdoit.task;
 
-import java.time.LocalDateTime;
-
 public record TaskDTO(
+		String id,
 		String title,
 		String description,
 		String creationDate,

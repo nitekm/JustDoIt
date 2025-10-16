@@ -1,5 +1,6 @@
 package asessment.justdoit.task;
 
+import asessment.justdoit.exceptionhandling.exceptions.TaskNotFound;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,17 +21,21 @@ class TaskService {
 
 	Mono<TaskDTO> update(String taskId, TaskDTO updatedTask) {
 		return taskRepository.findById(taskId)
+				.switchIfEmpty(Mono.error(new TaskNotFound(taskId)))
 				.map(existingTask -> updateTask(existingTask, updatedTask))
 				.flatMap(taskRepository::save)
 				.map(TaskMapper::toDTO);
 	}
 
 	Mono<Void> delete(String id) {
-		return taskRepository.deleteById(id);
+		return taskRepository.findById(id)
+				.switchIfEmpty(Mono.error(new TaskNotFound(id)))
+				.flatMap(task -> taskRepository.deleteById(task.getId()));
 	}
 
 	Mono<TaskDTO> getTaskById(String id) {
 		return taskRepository.findById(id)
+				.switchIfEmpty(Mono.error(new TaskNotFound(id)))
 				.map(TaskMapper::toDTO);
 	}
 

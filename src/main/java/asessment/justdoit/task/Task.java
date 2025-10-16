@@ -28,6 +28,10 @@ class Task {
 		this.status = status;
 	}
 
+	String getId() {
+		return id;
+	}
+
 	String getTitle() {
 		return title;
 	}
