@@ -32,6 +32,10 @@ class Task {
 		return id;
 	}
 
+	void setId(String id) {
+		this.id = id;
+	}
+
 	String getTitle() {
 		return title;
 	}
@@ -50,6 +54,10 @@ class Task {
 
 	LocalDateTime getCreationDate() {
 		return creationDate;
+	}
+
+	void setCreationDate(LocalDateTime creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	TaskStatus getStatus() {

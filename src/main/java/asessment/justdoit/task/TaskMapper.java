@@ -14,18 +14,21 @@ final class TaskMapper {
 				task.getId(),
 				task.getTitle(),
 				task.getDescription(),
-				formattedCreationDate,
-				task.getStatus().name()
+				task.getStatus().name(),
+				formattedCreationDate
 		);
 	}
 
 	static Task toTask(TaskDTO dto) {
-		TaskStatus status;
-		try {
-			status = TaskStatus.valueOf(dto.status());
-		} catch (IllegalArgumentException e) {
-			throw new InvalidTaskStatus("Invalid task status: " + dto.status());
+		if (dto.status() == null) return  new Task(dto.title(), dto.description(), null);
+		else {
+			TaskStatus status;
+			try {
+				status = TaskStatus.valueOf(dto.status());
+			} catch (IllegalArgumentException e) {
+				throw new InvalidTaskStatus("Invalid task status: " + dto.status());
+			}
+			return new Task(dto.title(), dto.description(), status);
 		}
-		return new Task(dto.title(), dto.description(), status);
 	}
 }
