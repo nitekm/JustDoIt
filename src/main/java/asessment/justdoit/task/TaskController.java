@@ -18,9 +18,11 @@ import reactor.core.publisher.Mono;
 class TaskController {
 
 	private final TaskService taskService;
+	private final TaskAssignmentService taskAssignmentService;
 
-	TaskController(TaskService taskService) {
+	TaskController(TaskService taskService, TaskAssignmentService taskAssignmentService) {
 		this.taskService = taskService;
+		this.taskAssignmentService = taskAssignmentService;
 	}
 
 	@Operation(
@@ -150,5 +152,20 @@ class TaskController {
 			@PathVariable String id
 	) {
 		return taskService.delete(id);
+	}
+
+	@Operation(
+			summary = "Bulk assign tasks to user",
+			description = "Assigns a list of tasks to a specific user"
+	)
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "204",
+					description = "Tasks assigned successfully"
+			)
+	})
+	@PostMapping("/bulk-assign")
+	Mono<Void> bulkAssignTasksToUser(@RequestBody BulkAssignTaskRequest request) {
+		return taskAssignmentService.assignTasksToUser(request);
 	}
 }

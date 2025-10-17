@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 class TaskService {
 
@@ -43,6 +45,15 @@ class TaskService {
 	Flux<TaskDTO> getAllTasks() {
 		return taskRepository.findAll()
 				.map(TaskMapper::toDTO);
+	}
+
+	Mono<TaskDTO> assignTaskToUser(String taskId, String userId) {
+		return taskRepository.findById(taskId)
+				.switchIfEmpty(Mono.error(new TaskNotFound(taskId)))
+				.flatMap(task -> {
+					task.setAssignedUserId(userId);
+					return taskRepository.save(task).map(TaskMapper::toDTO);
+				});
 	}
 
 	private Task updateTask(Task existingTask, TaskDTO updatedTask) {

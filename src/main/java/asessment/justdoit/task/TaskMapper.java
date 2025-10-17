@@ -15,7 +15,8 @@ final class TaskMapper {
 				task.getTitle(),
 				task.getDescription(),
 				task.getStatus().name(),
-				formattedCreationDate
+				formattedCreationDate,
+				task.getAssignedUserId()
 		);
 	}
 

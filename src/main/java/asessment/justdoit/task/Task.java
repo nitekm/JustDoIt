@@ -20,6 +20,8 @@ class Task {
 
 	private TaskStatus status;
 
+	private String assignedUserId;
+
 	Task() {}
 	
 	Task(String title, String description, TaskStatus status) {
@@ -68,4 +70,11 @@ class Task {
 		this.status = status;
 	}
 
+	String getAssignedUserId() {
+		return assignedUserId;
+	}
+
+	void setAssignedUserId(String assignedUserId) {
+		this.assignedUserId = assignedUserId;
+	}
 }

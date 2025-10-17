@@ -2,6 +2,7 @@ package asessment.justdoit.exceptionhandling;
 
 import asessment.justdoit.exceptionhandling.exceptions.InvalidTaskStatus;
 import asessment.justdoit.exceptionhandling.exceptions.TaskNotFound;
+import asessment.justdoit.exceptionhandling.exceptions.UserNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,6 +17,12 @@ class GlobalExceptionHandler {
 	@ExceptionHandler(TaskNotFound.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	Mono<ApiErrorResponse> handleTaskNotFound(TaskNotFound ex) {
+		return Mono.just(buildErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
+	}
+
+	@ExceptionHandler(UserNotFound.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	Mono<ApiErrorResponse> handleTaskNotFound(UserNotFound ex) {
 		return Mono.just(buildErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
 	}
 

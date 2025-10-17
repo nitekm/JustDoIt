@@ -157,7 +157,8 @@ class TaskServiceTest {
 				"Updated Title",
 				"Updated Description",
 				TaskStatus.IN_PROGRESS.name(),
-				"2025-10-10T15:00:00"
+				"2025-10-10T15:00:00",
+				null
 		);
 
 		when(taskRepository.findById(testTask.getId())).thenReturn(Mono.just(testTask));
@@ -185,7 +186,7 @@ class TaskServiceTest {
 	void shouldThrowTaskNotFoundWhenUpdatingNonExistentTask() {
 		// Given
 		String taskId = "nonexistent";
-		TaskDTO updatedTaskDTO = new TaskDTO(taskId, "Title", "Desc", "TODO", null);
+		TaskDTO updatedTaskDTO = new TaskDTO(taskId, "Title", "Desc", "TODO", null, null);
 
 		when(taskRepository.findById(taskId)).thenReturn(Mono.empty());
 
@@ -254,6 +255,7 @@ class TaskServiceTest {
 				title,
 				"Test Description",
 				status,
+				null,
 				null
 		);
 	}
