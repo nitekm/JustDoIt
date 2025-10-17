@@ -6,10 +6,10 @@ import java.time.LocalDateTime;
 
 @Schema(description = "Error response")
 public record ApiErrorResponse(
-		@Schema(description = "HTTP status code", example = "404")
+		@Schema(description = "HTTP error status code")
 		int status,
 
-		@Schema(description = "Error message", example = "Task not found with id: 507f1f77bcf86cd799439011")
+		@Schema(description = "Error message", example = "An error message describing what went wrong")
 		String message,
 
 		@Schema(description = "Error timestamp", example = "2025-10-16T10:30:00")

@@ -114,6 +114,11 @@ class TaskController {
 					responseCode = "400",
 					description = "Invalid task data",
 					content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
+			),
+			@ApiResponse(
+					responseCode = "409",
+					description = "Version conflict",
+					content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
 			)
 	})
 	@PutMapping("/{id}")
