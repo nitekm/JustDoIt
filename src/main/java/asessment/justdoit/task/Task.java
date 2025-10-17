@@ -2,6 +2,7 @@ package asessment.justdoit.task;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -23,15 +24,19 @@ class Task {
 
 	private String assignedUserId;
 
+	@Version
+	private Long version;
+
 	Task() {}
 
-	Task(String id, String title, String description, TaskStatus status, LocalDateTime creationDate, String assignedUserId) {
+	Task(String id, String title, String description, TaskStatus status, LocalDateTime creationDate, String assignedUserId, Long version) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.status = status;
 		this.creationDate = creationDate;
 		this.assignedUserId = assignedUserId;
+		this.version = version;
 	}
 
 	Task(String title, String description, TaskStatus status) {
@@ -86,5 +91,9 @@ class Task {
 
 	void setAssignedUserId(String assignedUserId) {
 		this.assignedUserId = assignedUserId;
+	}
+
+	Long getVersion() {
+		return version;
 	}
 }

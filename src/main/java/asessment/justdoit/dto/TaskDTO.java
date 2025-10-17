@@ -20,5 +20,8 @@ public record TaskDTO(
 		String creationDate,
 
 		@Schema(description = "ID of the user, who is assigned to this task", example = "masterdev123")
-		String assignedUserId
+		String assignedUserId,
+
+		@Schema(description = "Version of the task", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+		Long version
 ) {}

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -154,6 +155,24 @@ class TaskControllerTest {
 	}
 
 	@Test
+	@DisplayName("Should return 409 when task to update has outdated version")
+	void updateTaskWithOutdatedVersionReturnsConflict() {
+		String taskId = "1";
+		TaskDTO invalidTask = createTaskDTO(taskId, "Updated task with old version");
+
+		when(taskService.update(taskId, invalidTask))
+				.thenReturn(Mono.error(new OptimisticLockingFailureException("Version conflict")));
+
+		webTestClient.put()
+				.uri("/tasks/{id}", taskId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(invalidTask)
+				.exchange()
+				.expectStatus().is4xxClientError()
+				.expectBody(ApiErrorResponse.class);
+	}
+
+	@Test
 	@DisplayName("Should delete existing task")
 	void deleteTaskReturnsNoContent() {
 		String taskId = "1";
@@ -187,7 +206,8 @@ class TaskControllerTest {
 				"test task",
 				TaskStatus.TODO.name(),
 				null,
-				null
+				null,
+				0L
 		);
 	}
 

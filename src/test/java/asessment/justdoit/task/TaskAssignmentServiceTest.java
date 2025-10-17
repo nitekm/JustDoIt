@@ -35,7 +35,7 @@ class TaskAssignmentServiceTest {
 		final BulkAssignTaskRequest request = new BulkAssignTaskRequest(userId, taskIds);
 
 		when(taskService.assignTaskToUser(anyString(), anyString()))
-				.thenReturn(Mono.just(new TaskDTO("1", "not relevant", "", "", "", "")));
+				.thenReturn(Mono.just(new TaskDTO("1", "not relevant", "", "", "", "", 0L)));
 		when(userAssignedTaskService.assignTaskToUser(anyString(), anyString()))
 				.thenReturn(Mono.just(new UserDTO("1", "not relevant", Set.of(""))));
 

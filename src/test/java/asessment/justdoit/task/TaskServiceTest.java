@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.OptimisticLockingFailureException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -33,9 +34,15 @@ class TaskServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		testTask = new Task("Test Task", "Test Description", TaskStatus.TODO);
-		testTask.setId("67309a1b2c3d4e5f6a7b8c9d");
-		testTask.setCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0));
+		testTask = new Task(
+				"67309a1b2c3d4e5f6a7b8c9d",
+				"Test Task",
+				"Test Description",
+				TaskStatus.TODO,
+				LocalDateTime.of(2025, 1, 1, 0, 0),
+				null,
+				0L
+		);
 	}
 
 	@Test
@@ -159,7 +166,8 @@ class TaskServiceTest {
 				"Updated Description",
 				TaskStatus.IN_PROGRESS.name(),
 				"2025-10-10T15:00:00",
-				null
+				null,
+				0L
 		);
 
 		when(taskRepository.findById(testTask.getId())).thenReturn(Mono.just(testTask));
@@ -188,7 +196,15 @@ class TaskServiceTest {
 	void shouldThrowTaskNotFoundWhenUpdatingNonExistentTask() {
 		// Given
 		String taskId = "nonexistent";
-		TaskDTO updatedTaskDTO = new TaskDTO(taskId, "Title", "Desc", "TODO", null, null);
+		TaskDTO updatedTaskDTO = new TaskDTO(
+				taskId,
+				"Title",
+				"Desc",
+				"TODO",
+				null,
+				null,
+				0L
+		);
 
 		when(taskRepository.findById(taskId)).thenReturn(Mono.empty());
 
@@ -202,6 +218,36 @@ class TaskServiceTest {
 
 		verify(taskRepository, times(1)).findById(taskId);
 		verify(taskRepository, never()).save(any(Task.class));
+	}
+
+	@Test
+	@DisplayName("Should throw OptimisticLockingException when updating task with outdated version")
+	void shouldThrowOptimisticLockingExceptionWhenUpdatingTaskWithOutdatedVersion() {
+		// Given
+		TaskDTO updatedTaskDTO = new TaskDTO(
+				testTask.getId(),
+				"Title",
+				"Desc",
+				"TODO",
+				null,
+				null,
+				-1L
+		);
+
+		mockFindByIdReturns(testTask);
+		when(taskRepository.save(any(Task.class)))
+				.thenReturn(Mono.error(new OptimisticLockingFailureException("Version mismatch")));
+
+		// When
+		Mono<TaskDTO> result = taskService.update(testTask.getId(), updatedTaskDTO);
+
+		// Then
+		StepVerifier.create(result)
+				.expectError(OptimisticLockingFailureException.class)
+				.verify();
+
+		verify(taskRepository, times(1)).findById(testTask.getId());
+		verify(taskRepository, times(1)).save(any(Task.class));
 	}
 
 	@Test
@@ -258,7 +304,8 @@ class TaskServiceTest {
 				"Test Description",
 				status,
 				null,
-				null
+				null,
+				0L
 		);
 	}
 

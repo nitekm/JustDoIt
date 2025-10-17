@@ -3,6 +3,7 @@ package asessment.justdoit.exceptionhandling;
 import asessment.justdoit.exceptionhandling.exceptions.InvalidTaskStatus;
 import asessment.justdoit.exceptionhandling.exceptions.TaskNotFound;
 import asessment.justdoit.exceptionhandling.exceptions.UserNotFound;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,7 +22,6 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(UserNotFound.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
 	Mono<ResponseEntity<ApiErrorResponse>> handleTaskNotFound(UserNotFound ex) {
 		return Mono.just(buildErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
 	}
@@ -29,6 +29,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(InvalidTaskStatus.class)
 	Mono<ResponseEntity<ApiErrorResponse>> handleInvalidTaskStatus(InvalidTaskStatus ex) {
 		return Mono.just(buildErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
+	}
+
+	@ExceptionHandler(OptimisticLockingFailureException.class)
+	Mono<ResponseEntity<ApiErrorResponse>> handleOptimisticLockingFailure(OptimisticLockingFailureException ex) {
+		return Mono.just(buildErrorResponse(HttpStatus.CONFLICT.value(), "Version conflict."));
 	}
 
 	private ResponseEntity<ApiErrorResponse> buildErrorResponse(int statusCode, String message) {

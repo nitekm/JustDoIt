@@ -17,7 +17,8 @@ final class TaskMapper {
 				task.getDescription(),
 				task.getStatus().name(),
 				formattedCreationDate,
-				task.getAssignedUserId()
+				task.getAssignedUserId(),
+				task.getVersion()
 		);
 	}
 
@@ -32,7 +33,8 @@ final class TaskMapper {
 					updatedTask.description(),
 					getTaskStatus(updatedTask.status()),
 					task.getCreationDate(),
-					task.getAssignedUserId()
+					task.getAssignedUserId(),
+					updatedTask.version()
 			);
 		}
 
