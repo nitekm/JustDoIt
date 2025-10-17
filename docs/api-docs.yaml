@@ -23,18 +23,18 @@ paths:
           type: string
         example: 507f1f77bcf86cd799439011
       responses:
-        "404":
-          description: Task not found
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
         "200":
           description: Task found
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/TaskDTO"
+        "404":
+          description: Task not found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
     put:
       tags:
       - task-controller
@@ -57,18 +57,18 @@ paths:
               $ref: "#/components/schemas/TaskDTO"
         required: true
       responses:
-        "404":
-          description: Task not found
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
         "200":
           description: Task updated successfully
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/TaskDTO"
+        "404":
+          description: Task not found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
         "400":
           description: Invalid task data
           content:
@@ -90,14 +90,14 @@ paths:
           type: string
         example: 507f1f77bcf86cd799439011
       responses:
+        "204":
+          description: Task deleted successfully
         "404":
           description: Task not found
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/ApiErrorResponse"
-        "204":
-          description: Task deleted successfully
   /users:
     post:
       tags:
@@ -112,12 +112,6 @@ paths:
               $ref: "#/components/schemas/UserDTO"
         required: true
       responses:
-        "404":
-          description: Not Found
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
         "200":
           description: User created successfully
           content:
@@ -132,12 +126,6 @@ paths:
       description: Retrieves a list of all tasks in the system
       operationId: getAllTasks
       responses:
-        "404":
-          description: Not Found
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
         "200":
           description: Successfully retrieved all tasks
           content:
@@ -158,12 +146,6 @@ paths:
               $ref: "#/components/schemas/TaskDTO"
         required: true
       responses:
-        "404":
-          description: Not Found
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
         "201":
           description: Task created successfully
           content:
@@ -190,12 +172,6 @@ paths:
               $ref: "#/components/schemas/BulkAssignTaskRequest"
         required: true
       responses:
-        "404":
-          description: Not Found
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
         "204":
           description: Tasks assigned successfully
   /users/{id}:
@@ -212,35 +188,16 @@ paths:
         schema:
           type: string
       responses:
-        "404":
-          description: User not found
-          content: {}
         "200":
           description: User retrieved successfully
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/UserDTO"
+        "404":
+          description: User not found
 components:
   schemas:
-    ApiErrorResponse:
-      type: object
-      description: Error response
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code
-          example: 404
-        message:
-          type: string
-          description: Error message
-          example: "Task not found with id: 507f1f77bcf86cd799439011"
-        timestamp:
-          type: string
-          format: date-time
-          description: Error timestamp
-          example: 2025-10-16T10:30:00
     TaskDTO:
       type: object
       description: Task data transfer object
@@ -275,9 +232,33 @@ components:
           type: string
           description: "ID of the user, who is assigned to this task"
           example: masterdev123
+        version:
+          type: integer
+          format: int64
+          description: Version of the task
+          example: 1
+          readOnly: true
       required:
       - status
       - title
+    ApiErrorResponse:
+      type: object
+      description: Error response
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code
+          example: 404
+        message:
+          type: string
+          description: Error message
+          example: "Task not found with id: 507f1f77bcf86cd799439011"
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+          example: 2025-10-16T10:30:00
     UserDTO:
       type: object
       description: User data transfer object
