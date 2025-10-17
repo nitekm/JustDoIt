@@ -25,12 +25,13 @@ class Task {
 
 	Task() {}
 
-	Task(String id, String title, String description, TaskStatus status, LocalDateTime creationDate) {
+	Task(String id, String title, String description, TaskStatus status, LocalDateTime creationDate, String assignedUserId) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.status = status;
 		this.creationDate = creationDate;
+		this.assignedUserId = assignedUserId;
 	}
 
 	Task(String title, String description, TaskStatus status) {

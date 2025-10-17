@@ -1,14 +1,9 @@
 package asessment.justdoit.user;
 
+import asessment.justdoit.dto.UserDTO;
 import asessment.justdoit.exceptionhandling.exceptions.UserNotFound;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
-import java.util.Set;
 
 @Service
 class UserService {
@@ -19,16 +14,23 @@ class UserService {
 		this.userRepository = userRepository;
 	}
 
-
 	Mono<UserDTO> createUser(UserDTO user) {
 		return userRepository.save(new User(user.username()))
-				.map(savedUser -> new UserDTO(savedUser.getId(), savedUser.getUsername(), savedUser.getTaskIds()));
+				.map(savedUser -> new UserDTO(
+						savedUser.getId(),
+						savedUser.getUsername(),
+						savedUser.getTaskIds()
+				));
 	}
 
 	Mono<UserDTO> getUser(String id) {
 		return userRepository.findById(id)
 				.switchIfEmpty(Mono.error(new UserNotFound(id)))
-				.map(user -> new UserDTO(user.getId(), user.getUsername(), user.getTaskIds()));
+				.map(user -> new UserDTO(
+						user.getId(),
+						user.getUsername(),
+						user.getTaskIds()
+				));
 	}
 
 	Mono<UserDTO> updateUserWithAssignedTask(String userId, String taskId) {
@@ -36,7 +38,11 @@ class UserService {
 				.switchIfEmpty(Mono.error(new UserNotFound(userId)))
 				.flatMap(user -> {
 					user.getTaskIds().add(taskId);
-					return userRepository.save(user).map(savedUser -> new UserDTO(savedUser.getId(), savedUser.getUsername(), user.getTaskIds()));
+					return userRepository.save(user).map(savedUser -> new UserDTO(
+							savedUser.getId(),
+							savedUser.getUsername(),
+							user.getTaskIds()
+					));
 				});
 	}
 }

@@ -1,5 +1,6 @@
 package asessment.justdoit.task;
 
+import asessment.justdoit.dto.TaskDTO;
 import asessment.justdoit.exceptionhandling.exceptions.InvalidTaskStatus;
 
 import java.time.format.DateTimeFormatter;
@@ -24,13 +25,14 @@ final class TaskMapper {
 			return new Task(dto.title(), dto.description(), getTaskStatus(dto.status()));
 	}
 
-	static Task mapUpdatedTask(Task task, TaskDTO updatedTask) {
+	static Task toUpdatedTask(Task task, TaskDTO updatedTask) {
 			return new Task(
 					task.getId(),
 					updatedTask.title(),
 					updatedTask.description(),
 					getTaskStatus(updatedTask.status()),
-					task.getCreationDate()
+					task.getCreationDate(),
+					task.getAssignedUserId()
 			);
 		}
 

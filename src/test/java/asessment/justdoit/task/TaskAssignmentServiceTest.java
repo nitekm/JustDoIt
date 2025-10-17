@@ -1,8 +1,9 @@
 package asessment.justdoit.task;
 
+import asessment.justdoit.dto.TaskDTO;
 import asessment.justdoit.exceptionhandling.exceptions.TaskNotFound;
 import asessment.justdoit.user.UserAssignedTaskService;
-import asessment.justdoit.user.UserDTO;
+import asessment.justdoit.dto.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,10 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

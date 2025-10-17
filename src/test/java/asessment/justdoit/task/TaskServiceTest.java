@@ -1,5 +1,6 @@
 package asessment.justdoit.task;
 
+import asessment.justdoit.dto.TaskDTO;
 import asessment.justdoit.exceptionhandling.exceptions.InvalidTaskStatus;
 import asessment.justdoit.exceptionhandling.exceptions.TaskNotFound;
 import org.junit.jupiter.api.BeforeEach;
@@ -162,7 +163,8 @@ class TaskServiceTest {
 		);
 
 		when(taskRepository.findById(testTask.getId())).thenReturn(Mono.just(testTask));
-		when(taskRepository.save(any(Task.class))).thenReturn(Mono.just(testTask));
+		when(taskRepository.save(any(Task.class)))
+				.thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
 		// When
 		Mono<TaskDTO> result = taskService.update(testTask.getId(), updatedTaskDTO);

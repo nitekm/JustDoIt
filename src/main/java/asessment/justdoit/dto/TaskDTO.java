@@ -1,9 +1,9 @@
-package asessment.justdoit.task;
+package asessment.justdoit.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Task data transfer object")
-record TaskDTO(
+public record TaskDTO(
 		@Schema(description = "Task unique identifier", example = "507f1f77bcf86cd799439011", accessMode = Schema.AccessMode.READ_ONLY)
 		String id,
 

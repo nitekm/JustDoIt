@@ -1,6 +1,7 @@
 package asessment.justdoit.task;
 
 
+import asessment.justdoit.dto.TaskDTO;
 import asessment.justdoit.exceptionhandling.ApiErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

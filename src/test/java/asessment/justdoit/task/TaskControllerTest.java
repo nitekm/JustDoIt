@@ -1,5 +1,6 @@
 package asessment.justdoit.task;
 
+import asessment.justdoit.dto.TaskDTO;
 import asessment.justdoit.exceptionhandling.ApiErrorResponse;
 import asessment.justdoit.exceptionhandling.GlobalExceptionHandler;
 import asessment.justdoit.exceptionhandling.exceptions.InvalidTaskStatus;

@@ -1,11 +1,10 @@
 package asessment.justdoit.task;
 
+import asessment.justdoit.dto.TaskDTO;
 import asessment.justdoit.exceptionhandling.exceptions.TaskNotFound;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.concurrent.CompletableFuture;
 
 @Service
 class TaskService {
@@ -24,7 +23,7 @@ class TaskService {
 	Mono<TaskDTO> update(String taskId, TaskDTO updatedTask) {
 		return taskRepository.findById(taskId)
 				.switchIfEmpty(Mono.error(new TaskNotFound(taskId)))
-				.map(existingTask -> TaskMapper.mapUpdatedTask(existingTask, updatedTask))
+				.map(existingTask -> TaskMapper.toUpdatedTask(existingTask, updatedTask))
 				.flatMap(taskRepository::save)
 				.map(TaskMapper::toDTO);
 	}

@@ -1,9 +1,8 @@
 package asessment.justdoit.user;
 
+import asessment.justdoit.dto.UserDTO;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
-import java.util.Collections;
 
 @Service
 public class UserAssignedTaskService {
@@ -17,4 +16,5 @@ public class UserAssignedTaskService {
 	public Mono<UserDTO> assignTaskToUser(String userId, String taskId) {
 		return userService.updateUserWithAssignedTask(userId, taskId);
 	}
+
 }
