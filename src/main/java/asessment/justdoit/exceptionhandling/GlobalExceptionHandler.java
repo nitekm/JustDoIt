@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(UserNotFound.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	Mono<ApiErrorResponse> handleTaskNotFound(UserNotFound ex) {
+	Mono<ResponseEntity<ApiErrorResponse>> handleTaskNotFound(UserNotFound ex) {
 		return Mono.just(buildErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
 	}
 

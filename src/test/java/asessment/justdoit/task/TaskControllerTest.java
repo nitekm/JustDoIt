@@ -180,7 +180,14 @@ class TaskControllerTest {
 	}
 
 	private TaskDTO createTaskDTO(String id, String title) {
-		return new TaskDTO(id, title, "test task", TaskStatus.TODO.name(), null);
+		return new TaskDTO(
+				id,
+				title,
+				"test task",
+				TaskStatus.TODO.name(),
+				null,
+				null
+		);
 	}
 
 }
