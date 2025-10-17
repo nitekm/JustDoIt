@@ -24,7 +24,7 @@ class TaskService {
 	Mono<TaskDTO> update(String taskId, TaskDTO updatedTask) {
 		return taskRepository.findById(taskId)
 				.switchIfEmpty(Mono.error(new TaskNotFound(taskId)))
-				.map(existingTask -> updateTask(existingTask, updatedTask))
+				.map(existingTask -> TaskMapper.mapUpdatedTask(existingTask, updatedTask))
 				.flatMap(taskRepository::save)
 				.map(TaskMapper::toDTO);
 	}
@@ -55,12 +55,4 @@ class TaskService {
 					return taskRepository.save(task).map(TaskMapper::toDTO);
 				});
 	}
-
-	private Task updateTask(Task existingTask, TaskDTO updatedTask) {
-		existingTask.setTitle(updatedTask.title());
-		existingTask.setDescription(updatedTask.description());
-		existingTask.setStatus(TaskStatus.valueOf(updatedTask.status()));
-		return existingTask;
-	}
-
 }

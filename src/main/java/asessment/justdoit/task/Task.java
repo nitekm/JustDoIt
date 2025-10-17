@@ -3,6 +3,7 @@ package asessment.justdoit.task;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +24,15 @@ class Task {
 	private String assignedUserId;
 
 	Task() {}
-	
+
+	Task(String id, String title, String description, TaskStatus status, LocalDateTime creationDate) {
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.status = status;
+		this.creationDate = creationDate;
+	}
+
 	Task(String title, String description, TaskStatus status) {
 		this.title = title;
 		this.description = description;

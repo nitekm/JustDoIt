@@ -15,6 +15,6 @@ public class UserAssignedTaskService {
 	}
 
 	public Mono<UserDTO> assignTaskToUser(String userId, String taskId) {
-		return userService.updateUserWithAssignedTasks(userId, Collections.singleton(taskId));
+		return userService.updateUserWithAssignedTask(userId, taskId);
 	}
 }

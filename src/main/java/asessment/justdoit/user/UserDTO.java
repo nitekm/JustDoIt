@@ -12,6 +12,6 @@ public record UserDTO(
 		@Schema(description = "User username", example = "masterdev123", required = true)
 		@NotEmpty(message = "Username must not be empty")
 		String username,
-		@Schema(description = "IDs of tasks assigned to this user", example = "[1234, 4321]")
+		@Schema(description = "IDs of tasks assigned to this user", example = "[1234, 4321]", accessMode = Schema.AccessMode.READ_ONLY)
 		Set<String> assignedTaskIds
 ) { }

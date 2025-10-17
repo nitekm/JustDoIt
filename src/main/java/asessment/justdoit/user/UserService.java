@@ -31,11 +31,11 @@ class UserService {
 				.map(user -> new UserDTO(user.getId(), user.getUsername(), user.getTaskIds()));
 	}
 
-	Mono<UserDTO> updateUserWithAssignedTasks(String userId, Set<String> taskIds) {
+	Mono<UserDTO> updateUserWithAssignedTask(String userId, String taskId) {
 		return userRepository.findById(userId)
 				.switchIfEmpty(Mono.error(new UserNotFound(userId)))
 				.flatMap(user -> {
-					user.setTaskIds(taskIds);
+					user.getTaskIds().add(taskId);
 					return userRepository.save(user).map(savedUser -> new UserDTO(savedUser.getId(), savedUser.getUsername(), user.getTaskIds()));
 				});
 	}

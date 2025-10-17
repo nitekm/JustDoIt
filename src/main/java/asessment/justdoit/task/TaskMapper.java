@@ -21,15 +21,27 @@ final class TaskMapper {
 	}
 
 	static Task toTask(TaskDTO dto) {
-		if (dto.status() == null) return  new Task(dto.title(), dto.description(), null);
+			return new Task(dto.title(), dto.description(), getTaskStatus(dto.status()));
+	}
+
+	static Task mapUpdatedTask(Task task, TaskDTO updatedTask) {
+			return new Task(
+					task.getId(),
+					updatedTask.title(),
+					updatedTask.description(),
+					getTaskStatus(updatedTask.status()),
+					task.getCreationDate()
+			);
+		}
+
+	private static TaskStatus getTaskStatus(String status) {
+		if (status == null) return null;
 		else {
-			TaskStatus status;
 			try {
-				status = TaskStatus.valueOf(dto.status());
+				return TaskStatus.valueOf(status);
 			} catch (IllegalArgumentException e) {
-				throw new InvalidTaskStatus("Invalid task status: " + dto.status());
+				throw new InvalidTaskStatus("Invalid task status: " + status);
 			}
-			return new Task(dto.title(), dto.description(), status);
 		}
 	}
 }

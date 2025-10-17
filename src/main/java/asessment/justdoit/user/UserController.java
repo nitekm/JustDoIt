@@ -49,8 +49,8 @@ public class UserController {
 					)
 			}
 	)
-	@GetMapping("{id}")
-	Mono<UserDTO> getUser(@RequestParam String id) {
+	@GetMapping("/{id}")
+	Mono<UserDTO> getUser(@PathVariable String id) {
 		return userService.getUser(id);
 	}
 }

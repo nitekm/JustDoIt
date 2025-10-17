@@ -3,6 +3,7 @@ package asessment.justdoit.user;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ class User {
 	@Id
 	private String id;
 	private String username;
-	private Set<String> taskIds;
+	private Set<String> taskIds = Collections.emptySet();
 
 	User() {}
 
