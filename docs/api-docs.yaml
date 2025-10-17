@@ -1,0 +1,326 @@
+openapi: 3.1.0
+info:
+  title: JustDoIt Task Management API
+  description: A reactive REST API for managing tasks
+  version: v1.0.0
+servers:
+- url: http://localhost:8080/
+  description: Local server for development
+paths:
+  /tasks/{id}:
+    get:
+      tags:
+      - task-controller
+      summary: Get task by ID
+      description: Retrieves a specific task by its unique identifier
+      operationId: getTaskById
+      parameters:
+      - name: id
+        in: path
+        description: Task ID
+        required: true
+        schema:
+          type: string
+        example: 507f1f77bcf86cd799439011
+      responses:
+        "404":
+          description: Task not found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "200":
+          description: Task found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TaskDTO"
+    put:
+      tags:
+      - task-controller
+      summary: Update a task
+      description: Updates an existing task with the provided information
+      operationId: updateTask
+      parameters:
+      - name: id
+        in: path
+        description: Task ID
+        required: true
+        schema:
+          type: string
+        example: 507f1f77bcf86cd799439011
+      requestBody:
+        description: Updated task data
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskDTO"
+        required: true
+      responses:
+        "404":
+          description: Task not found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "200":
+          description: Task updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TaskDTO"
+        "400":
+          description: Invalid task data
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+    delete:
+      tags:
+      - task-controller
+      summary: Delete a task
+      description: Deletes a task by its unique identifier
+      operationId: deleteTask
+      parameters:
+      - name: id
+        in: path
+        description: Task ID
+        required: true
+        schema:
+          type: string
+        example: 507f1f77bcf86cd799439011
+      responses:
+        "404":
+          description: Task not found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "204":
+          description: Task deleted successfully
+  /users:
+    post:
+      tags:
+      - user-controller
+      summary: Create a new user
+      description: Creates a new user with the given details
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserDTO"
+        required: true
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "200":
+          description: User created successfully
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+  /tasks:
+    get:
+      tags:
+      - task-controller
+      summary: Get all tasks
+      description: Retrieves a list of all tasks in the system
+      operationId: getAllTasks
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "200":
+          description: Successfully retrieved all tasks
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TaskDTO"
+    post:
+      tags:
+      - task-controller
+      summary: Create a new task
+      description: Creates a new task with the provided information
+      operationId: createTask
+      requestBody:
+        description: Task to create
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskDTO"
+        required: true
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "201":
+          description: Task created successfully
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TaskDTO"
+        "400":
+          description: Invalid task data
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /tasks/bulk-assign:
+    post:
+      tags:
+      - task-controller
+      summary: Bulk assign tasks to user
+      description: Assigns a list of tasks to a specific user
+      operationId: bulkAssignTasksToUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkAssignTaskRequest"
+        required: true
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "204":
+          description: Tasks assigned successfully
+  /users/{id}:
+    get:
+      tags:
+      - user-controller
+      summary: Get a user by ID
+      description: Retrieves a user by their unique ID
+      operationId: getUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "404":
+          description: User not found
+          content: {}
+        "200":
+          description: User retrieved successfully
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+components:
+  schemas:
+    ApiErrorResponse:
+      type: object
+      description: Error response
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code
+          example: 404
+        message:
+          type: string
+          description: Error message
+          example: "Task not found with id: 507f1f77bcf86cd799439011"
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+          example: 2025-10-16T10:30:00
+    TaskDTO:
+      type: object
+      description: Task data transfer object
+      properties:
+        id:
+          type: string
+          description: Task unique identifier
+          example: 507f1f77bcf86cd799439011
+          readOnly: true
+        title:
+          type: string
+          description: Task title
+          example: Complete project documentation
+        description:
+          type: string
+          description: Task description
+          example: Write comprehensive API documentation with examples
+        status:
+          type: string
+          description: Task status
+          enum:
+          - TODO
+          - IN_PROGRESS
+          - DONE
+          example: IN_PROGRESS
+        creationDate:
+          type: string
+          description: Task creation date
+          example: 2025-10-16T10:30:00
+          readOnly: true
+        assignedUserId:
+          type: string
+          description: "ID of the user, who is assigned to this task"
+          example: masterdev123
+      required:
+      - status
+      - title
+    UserDTO:
+      type: object
+      description: User data transfer object
+      properties:
+        id:
+          type: string
+          description: User unique identifier
+          example: 507f1f77bcf86cd799439011
+          readOnly: true
+        username:
+          type: string
+          description: User username
+          example: masterdev123
+          minLength: 1
+        assignedTaskIds:
+          type: array
+          description: IDs of tasks assigned to this user
+          example:
+          - 1234
+          - 4321
+          items:
+            type: string
+          readOnly: true
+          uniqueItems: true
+      required:
+      - username
+    BulkAssignTaskRequest:
+      type: object
+      description: Request user to bulk assign tasks to user
+      properties:
+        assignedUserId:
+          type: string
+          description: "ID of the user, who will be assigned to this task"
+          example: 68f0c952b962ba21ce0ef308
+        taskIds:
+          type: array
+          description: IDs of tasks which will be assigned
+          example:
+          - 1234
+          - 4321
+          items:
+            type: string
+          uniqueItems: true
+      required:
+      - assignedUserId
+      - taskIds

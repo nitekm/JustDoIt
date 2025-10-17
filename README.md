@@ -23,3 +23,5 @@ docker compose up --build
 ### 📚 API Documentation
 Once the app is running, you can explore the API documentation at:jj
 http://localhost:8080/swagger-ui/index.html
+
+Or get docs here: [openapi.yaml](docs/api-docs.yaml) and view it interactively using [Swagger Editor](https://editor.swagger.io/).
