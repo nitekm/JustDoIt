@@ -1,7 +1,6 @@
 package asessment.justdoit.task;
 
 import asessment.justdoit.dto.TaskDTO;
-import asessment.justdoit.exceptionhandling.exceptions.InvalidTaskStatus;
 
 import java.time.format.DateTimeFormatter;
 
@@ -23,7 +22,7 @@ final class TaskMapper {
 	}
 
 	static Task toTask(TaskDTO dto) {
-			return new Task(dto.title(), dto.description(), getTaskStatus(dto.status()));
+			return new Task(dto.title(), dto.description(), TaskStatus.getTaskStatus(dto.status()));
 	}
 
 	static Task toUpdatedTask(Task task, TaskDTO updatedTask) {
@@ -31,21 +30,10 @@ final class TaskMapper {
 					task.getId(),
 					updatedTask.title(),
 					updatedTask.description(),
-					getTaskStatus(updatedTask.status()),
+					TaskStatus.getTaskStatus(updatedTask.status()),
 					task.getCreationDate(),
 					task.getAssignedUserId(),
 					updatedTask.version()
 			);
 		}
-
-	private static TaskStatus getTaskStatus(String status) {
-		if (status == null) return null;
-		else {
-			try {
-				return TaskStatus.valueOf(status);
-			} catch (IllegalArgumentException e) {
-				throw new InvalidTaskStatus("Invalid task status: " + status);
-			}
-		}
-	}
 }

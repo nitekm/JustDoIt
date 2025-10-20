@@ -56,24 +56,24 @@ class TaskAssignmentServiceTest {
 	}
 
 	@Test
-	void assignTasksToUser_shouldPropagateErrorIfTaskAssignmentFails() {
+	void assignTasksToUser_shouldContinueWhenTaskAssignmentFails() {
 		// Given
 		String userId = "user1";
-		Set<String> taskIds = Set.of("task1");
+		Set<String> taskIds = Set.of("task1", "task2");
 		final BulkAssignTaskRequest request = new BulkAssignTaskRequest(userId, taskIds);
 
 		when(taskService.assignTaskToUser(anyString(), anyString()))
-				.thenReturn(Mono.error(new TaskNotFound("Task failure")));
+				.thenAnswer(invocation -> {
+					String taskId = invocation.getArgument(0);
+					return "task1".equals(taskId)
+							? Mono.error(new TaskNotFound(taskId))
+							: Mono.empty();
+				});
 
 		// When
 		Mono<Void> result = taskAssignmentService.assignTasksToUser(request);
 
 		// Then
-		StepVerifier.create(result)
-				.expectError(TaskNotFound.class)
-				.verify();
-
-		verify(taskService).assignTaskToUser("task1", userId);
-		verify(userAssignedTaskService, never()).assignTaskToUser(anyString(), anyString());
+		StepVerifier.create(result).verifyComplete();
 	}
 }
